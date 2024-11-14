@@ -17,17 +17,18 @@ local flyPath = "data/assets/fly.png"
 -- Global variables
 test = nil
 debugParameter = nil
+pause = false
 
 --[[
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-]]
+]]--
 
 -- ENVIRORMENT VARIABLES
 
 local title = "Better And Better Flies" -- Window title
 
 love.window.setMode(600, 600, { -- Window configuration
-    resizable = false,
+    resizable = true,
     minwidth = 600,   
     minheight = 600
 })
@@ -40,7 +41,7 @@ local food = { -- Food coords & Radius
     radius = 25
 }
 
-local numFlies = 500 -- Number of flies
+local numFlies = 1500 -- Number of flies
 local maxSteps = 404 -- Max of steps
 local maxSpeed = 2 -- Max of speed
 local mutationRate = 0.05 -- Mutation rate
@@ -80,17 +81,31 @@ function love.load()
 end
 
 function love.update(dt)
-    if test:allFlyiesDead() then
-        -- If none of the dots are alive, calculate the fitness based on the food and start the next generation
-        test:calculateFitness(food);
-        test:naturalSelection();
-        test:mutateFlies();
-    else 
-        -- If any of the dots are still alive then update and then show them
-        test:update();
-        test:show(flyImage);
+    if pause then
+    else
+        if test:allFlyiesDead() then
+            -- If none of the dots are alive, calculate the fitness based on the food and start the next generation
+            test:calculateFitness(food);
+            test:naturalSelection();
+            test:mutateFlies();
+        else 
+            -- If any of the dots are still alive then update and then show them
+            test:update();
+            test:show(flyImage);
+        end
+        debugParameter = tostring("Generation: " .. tostring(test.generation))
     end
-    debugParameter = tostring("Generation: " .. tostring(test.generation))
+end
+
+function love.keypressed(key)
+    -- If scape is pressed, pause or unpause the game
+    if key == "escape" then
+        if pause then
+            pause = false
+        else
+            pause = true
+        end
+    end
 end
 
 function love.draw()
@@ -102,6 +117,11 @@ function love.draw()
 
     -- Layer 2 (flies)
     test:show(flyImage);
+
+    -- Pause (escape pressed)
+    if pause then
+        drawPause()
+    end
 
     -- Final layer (Debug)
     if debugParameter then
