@@ -37,13 +37,13 @@ function drawMenu(buttonPressed, buttonNotPressed, buttonAlpha, button)
     local screenHeight, screenWidth = love.graphics.getHeight(), love.graphics.getWidth()
     love.graphics.rectangle("fill", 0, 0, screenWidth, screenHeight)
 
-    -- Opacituy
-    love.graphics.setColor(1, 1, 1, buttonAlpha)
+    -- Opacity
+    love.graphics.setColor(1, 1, 1, 1)
     love.graphics.draw(buttonPressed, button.x, button.y, 0, button.width / buttonPressed:getWidth(), button.height / buttonPressed:getHeight())
 
     -- Inverse opacity
     love.graphics.setColor(1, 1, 1, 1 - buttonAlpha)
-    love.graphics.draw(buttonNotPressed, button.x, button.y, 0, button.width / buttonNotPressed:getWidth(), button.height / buttonNotPressed:getHeight())
+    love.graphics.draw(buttonNotPressed, button.x, button.y - 10, 0, button.width / buttonNotPressed:getWidth(), (button.height + 10) / buttonNotPressed:getHeight())
 
     -- Resets color
     love.graphics.setColor(1, 1, 1)

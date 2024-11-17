@@ -27,5 +27,5 @@ function debug(parameter)
 end
 
 function isMouseOverButton(button, x, y)
-    return x >= button.x and x <= button.x + button.width and y >= button.y and y <= button.y + button.height
+    return x >= button.x and x <= button.x + button.width and y >= button.y - 10 and y <= button.y - 10 + button.height + 10
 end

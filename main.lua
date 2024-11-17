@@ -18,7 +18,7 @@ debugParameter = nil
 pause = false
 buttonAlpha = 1
 isButtonPressed = false
-fadeSpeed = 2
+fadeSpeed = 4
 
 -- Envirorment variables
 require("variables.envirorment")
@@ -65,9 +65,9 @@ function love.update(dt)
     if pause then
         -- Button fades
         if isButtonPressed then
-            buttonAlpha = math.min(buttonAlpha + fadeSpeed * dt, 1) -- Fading para pressionado
+            buttonAlpha = math.min(buttonAlpha + fadeSpeed * dt, 1)
         else
-            buttonAlpha = math.max(buttonAlpha - fadeSpeed * dt, 0) -- Fading para não pressionado
+            buttonAlpha = math.max(buttonAlpha - fadeSpeed * dt, 0)
         end
     else
         if test:allFlyiesDead() then
@@ -117,14 +117,15 @@ function love.draw()
 end
 
 function love.mousepressed(x, y, buttonKey)
-    if buttonKey == 1 and isMouseOverButton(button, x, y) then 
+    if buttonKey == 1 and isMouseOverButton(button, x, y) and pause then 
         isButtonPressed = true
     end
 end
 
 function love.mousereleased(x, y, buttonKey)
-    if buttonKey == 1 and isMouseOverButton(button, x, y) then 
+    if buttonKey == 1 and isButtonPressed then 
         isButtonPressed = false
-        pause = not pause -- Unpauses the game
+        buttonAlpha = 1
+        pause = false -- Unpauses the game
     end
 end
