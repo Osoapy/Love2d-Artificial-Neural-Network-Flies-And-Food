@@ -21,7 +21,7 @@ function drawFly(flyImage, fly)
         love.graphics.setColor(0, 1, 0) -- Green
     end
 
-    -- Calcula the angle using its velocity
+    -- Calculates the angle using its velocity
     local angle = math.atan2(fly.vel.y, fly.vel.x)
 
     -- Calculates the scale
@@ -31,8 +31,20 @@ function drawFly(flyImage, fly)
     love.graphics.draw(flyImage, fly.position.x, fly.position.y, angle, scale, scale, flyImage:getWidth() / 2, flyImage:getHeight() / 2)
 end
 
-function drawPause()
+function drawMenu(buttonPressed, buttonNotPressed, buttonAlpha, button)
+    -- Blackscreen
     love.graphics.setColor(0, 0, 0, 0.5)
     local screenHeight, screenWidth = love.graphics.getHeight(), love.graphics.getWidth()
     love.graphics.rectangle("fill", 0, 0, screenWidth, screenHeight)
+
+    -- Opacituy
+    love.graphics.setColor(1, 1, 1, buttonAlpha)
+    love.graphics.draw(buttonPressed, button.x, button.y, 0, button.width / buttonPressed:getWidth(), button.height / buttonPressed:getHeight())
+
+    -- Inverse opacity
+    love.graphics.setColor(1, 1, 1, 1 - buttonAlpha)
+    love.graphics.draw(buttonNotPressed, button.x, button.y, 0, button.width / buttonNotPressed:getWidth(), button.height / buttonNotPressed:getHeight())
+
+    -- Resets color
+    love.graphics.setColor(1, 1, 1)
 end

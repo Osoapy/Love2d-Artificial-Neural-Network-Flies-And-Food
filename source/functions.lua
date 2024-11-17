@@ -25,3 +25,7 @@ end
 function debug(parameter)
     love.graphics.print(tostring(parameter))
 end
+
+function isMouseOverButton(button, x, y)
+    return x >= button.x and x <= button.x + button.width and y >= button.y and y <= button.y + button.height
+end

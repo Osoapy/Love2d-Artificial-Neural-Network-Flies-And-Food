@@ -1,60 +1,35 @@
 -- Importing
-require("data.functions.drawLayout")
+require("data.layoutFunctions.drawLayout")
 require("source.population")
+require("source.functions")
 
 -- Setting a pseudo-randomic seed 
 math.randomseed(os.time())
 
 -- Recieving proportions
-local screenHeight, screenWidth = love.graphics.getHeight(), love.graphics.getWidth()
+screenHeight, screenWidth = love.graphics.getHeight(), love.graphics.getWidth()
 
 -- Path variables
-local fontPath = "data/assets/jetBrains.ttf"
-local backgroundPath = "data/assets/background.png"
-local foodPath = "data/assets/food.png"
-local flyPath = "data/assets/fly.png"
+require("variables.path")
 
 -- Global variables
 test = nil
 debugParameter = nil
 pause = false
+buttonAlpha = 1
+isButtonPressed = false
+fadeSpeed = 2
 
---[[
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-]]--
+-- Envirorment variables
+require("variables.envirorment")
 
--- ENVIRORMENT VARIABLES
-
-local title = "Better And Better Flies" -- Window title
-
-love.window.setMode(600, 600, { -- Window configuration
-    resizable = true,
-    minwidth = 600,   
-    minheight = 600
-})
-
-local food = { -- Food coords & Radius
-    -- x = screenWidth * 0.37,
-    -- y = screenHeight * 0.2,
-    x = math.random() * (screenWidth * 0.37),
-    y = math.random() * (screenHeight * 0.2),
-    radius = 25
+-- Initializing button
+local button = {
+    x = 200, -- Posição X do botão
+    y = 550, -- Posição Y do botão
+    width = 200, -- Largura do botão
+    height = 50, -- Altura do botão
 }
-
-local numFlies = 1500 -- Number of flies
-local maxSteps = 404 -- Max of steps
-local maxSpeed = 2 -- Max of speed
-local mutationRate = 0.05 -- Mutation rate
-
---[[
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-]]--
-
--- Initializing assets
-local myFont = nil
-local background = nil
-local foodImage = nil
-local flyImage = nil
 
 function love.load()
     -- Setting the title
@@ -76,12 +51,24 @@ function love.load()
     flyImage = love.graphics.newImage(flyPath)
     assert(foodImage, "Loading error on fly.png!")
 
+    -- Load the button
+    buttonPressedImage = love.graphics.newImage(buttonPressedPath)
+    buttonNotPressedImage = love.graphics.newImage(buttonNotPressedPath)
+    assert(buttonPressedImage, "Loading error on buttonPressed.png!")
+    assert(buttonNotPressedImage, "Loading error on buttonNotPressed.png!")
+
     -- Load the population
     test = newPopulation(numFlies, maxSteps, maxSpeed, food, mutationRate) -- Object population
 end
 
 function love.update(dt)
     if pause then
+        -- Button fades
+        if isButtonPressed then
+            buttonAlpha = math.min(buttonAlpha + fadeSpeed * dt, 1) -- Fading para pressionado
+        else
+            buttonAlpha = math.max(buttonAlpha - fadeSpeed * dt, 0) -- Fading para não pressionado
+        end
     else
         if test:allFlyiesDead() then
             -- If none of the dots are alive, calculate the fitness based on the food and start the next generation
@@ -120,11 +107,24 @@ function love.draw()
 
     -- Pause (escape pressed)
     if pause then
-        drawPause()
+        drawMenu(buttonNotPressedImage, buttonNotPressedImage, buttonAlpha, button)
     end
 
     -- Final layer (Debug)
     if debugParameter then
         debug(debugParameter)
+    end
+end
+
+function love.mousepressed(x, y, buttonKey)
+    if buttonKey == 1 and isMouseOverButton(button, x, y) then 
+        isButtonPressed = true
+    end
+end
+
+function love.mousereleased(x, y, buttonKey)
+    if buttonKey == 1 and isMouseOverButton(button, x, y) then 
+        isButtonPressed = false
+        pause = not pause -- Unpauses the game
     end
 end
