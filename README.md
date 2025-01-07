@@ -1,6 +1,10 @@
 # Love2D Neural Network - Flies and Food
 A simple simulation to learn genetic algorithms using neural networks. In this project, flies will learn how to find the best path to food using evolutionary techniques. Each generation is based on the most successful fly from the previous one.
 
+<div align="center">
+  <img src="https://i.pinimg.com/originals/f5/31/a2/f531a27da099b63bb3aaf9f21e477d88.gif"/>
+</div>
+
 ## Overview
 This project focuses on simulating a genetic algorithm where neural network-controlled flies attempt to reach a food source. The best-performing fly will influence the traits of the next generation, aiming for more optimized behavior over time.
 
